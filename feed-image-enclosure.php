@@ -12,7 +12,6 @@ License: GPL2
 add_action( 'rss2_item', 'add_post_featured_image_as_rss_item_enclosure' );
 
 function add_post_featured_image_as_rss_item_enclosure() {
-	global $post, $wp_query;
 
 	if ( ! has_post_thumbnail() )
 		return;
@@ -20,11 +19,14 @@ function add_post_featured_image_as_rss_item_enclosure() {
 	$thumbnail_id = get_post_thumbnail_id( get_the_ID() );
 	$thumbnail_size = apply_filters( 'rss_enclosure_image_size', 'thumbnail' );
 	$thumbnail = wp_get_attachment_image_src( $thumbnail_id, $thumbnail_size );
+	
+	$uploads = wp_upload_dir();
+	$thumbnail_path = str_replace( $uploads['baseurl'], $uploads['basedir'], $thumbnail[0] );
 
 	printf( 
 		'<enclosure url="%s" length="%s" type="%s" />',
 		$thumbnail[0], 
-		filesize( get_attached_file( $thumbnail_id ) ), 
+		filesize( $thumbnail_path ), 
 		get_post_mime_type( $thumbnail_id ) 
 	);
 }
