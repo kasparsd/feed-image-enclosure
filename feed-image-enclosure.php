@@ -12,7 +12,6 @@ License: GPL2
 add_action( 'rss2_item', 'add_post_featured_image_as_rss_item_enclosure' );
 
 function add_post_featured_image_as_rss_item_enclosure() {
-	global $post, $wp_query;
 
 	if ( ! has_post_thumbnail() )
 		return;
