@@ -19,17 +19,15 @@ function add_post_featured_image_as_rss_item_enclosure() {
 
 	$thumbnail_id = get_post_thumbnail_id( get_the_ID() );
 	$thumbnail_size = apply_filters( 'rss_enclosure_image_size', 'thumbnail' );
-
-	$thumbnail = image_get_intermediate_size( $thumbnail_id, $thumbnail_size );
+	$thumbnail = wp_get_attachment_image_src( $thumbnail_id, $thumbnail_size );
 	
 	$uploads = wp_upload_dir();
-	$thumbnail_full_path = $uploads['basedir'] . DIRECTORY_SEPARATOR . $thumbnail['path'];
-
+	$thumbnail_path = str_replace( $uploads['baseurl'], $uploads['basedir'], $thumbnail[0] );
 
 	printf( 
 		'<enclosure url="%s" length="%s" type="%s" />',
-		$thumbnail['url'], 
-		filesize( $thumbnail_full_path ), 
+		$thumbnail[0], 
+		filesize( $thumbnail_path ), 
 		get_post_mime_type( $thumbnail_id ) 
 	);
 }
